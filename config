@@ -51,7 +51,6 @@ before layers configuration."
 ;;keybinding
 (global-set-key "\C-x\C-m" 'helm-M-x)
 (global-set-key "\C-x\m" 'helm-M-x)
-;;(global-set-key "\C-c\C-m" 'helm-M-x)
 (global-set-key "\C-x\C-o" 'other-window)
 (global-set-key (kbd "s-}") 'other-window)
 (global-set-key (kbd "s-{") (lambda ()
@@ -64,25 +63,22 @@ before layers configuration."
 (defun my-go-local-bindings()
   (progn
     (setq gofmt-command "goimports")
-    (local-set-key (kbd "C-c C-r") 'go-remove-unused-imports)
-    (local-set-key (kbd "C-c C-f") 'gofmt)
-    (local-set-key (kbd "C-c C-k") 'godoc)
-    (local-set-key (kbd "C-c C-c") 'compile)
+    ;;(local-set-key (kbd "C-c C-r") 'go-remove-unused-imports)
+    ;;(local-set-key (kbd "C-c C-f") 'gofmt)
+    ;;(local-set-key (kbd "C-c C-k") 'godoc)
+    ;;(local-set-key (kbd "C-c C-c") 'compile)
     ;;(auto-complete-mode)
-    (local-set-key (kbd "C-c C-i") 'go-goto-imports)
+    ;;(local-set-key (kbd "C-c C-i") 'go-goto-imports)
     (local-set-key (kbd "M-.") 'godef-jump)
     (add-hook 'before-save-hook 'gofmt-before-save)
     ;; Customize compile command to run go build
     (if (not (string-match "go" compile-command))
         (set (make-local-variable 'compile-command)
              "go test"))
-    ;;(go-oracle-mode)
     ;;(compile-on-save-mode)
     (go-guru-hl-identifier-mode)
-    (setq go-tab-width 4)
     )
   )
-
 (add-hook 'go-mode-hook 'my-go-local-bindings)
 
 (custom-set-faces
@@ -90,8 +86,7 @@ before layers configuration."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(linum ((t (:height 0.8))))
- )
+ '(linum ((t (:height 0.8)))))
 
 
 (setq-default dotspacemacs-default-font '("Source Code Pro"
@@ -121,3 +116,13 @@ before layers configuration."
 (global-set-key (kbd "s-8") 'select-window-8)
 (global-set-key (kbd "s-9") 'select-window-9)
 (global-set-key (kbd "s-0") 'select-window-0)
+
+
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   (quote
+    (yaml-mode ws-butler window-numbering which-key web-mode web-beautify volatile-highlights vi-tilde-fringe uuidgen use-package toc-org tagedit sql-indent spacemacs-theme spaceline powerline smeargle slim-mode scss-mode sass-mode rvm ruby-tools ruby-test-mode rubocop rspec-mode robe reveal-in-osx-finder restart-emacs rbenv rainbow-delimiters projectile-rails rake inflections popwin persp-mode pcre2el pbcopy paradox spinner osx-trash osx-dictionary orgit org org-plus-contrib org-bullets open-junk-file neotree move-text mmm-mode markdown-toc markdown-mode magit-gitflow lorem-ipsum livid-mode skewer-mode simple-httpd linum-relative link-hint less-css-mode launchctl json-mode json-snatcher json-reformat js2-refactor multiple-cursors js2-mode js-doc jade-mode info+ indent-guide ido-vertical-mode hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile helm-gitignore request helm-flx helm-descbinds helm-css-scss helm-company helm-c-yasnippet helm-ag haml-mode google-translate golden-ratio go-eldoc gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md flycheck-pos-tip flycheck pkg-info epl flx-ido flx fill-column-indicator feature-mode fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit magit magit-popup git-commit with-editor evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight emmet-mode dumb-jump f diminish define-word company-web web-completion-data company-tern s dash-functional tern dash company-statistics company-quickhelp pos-tip company-go go-mode company column-enforce-mode coffee-mode clean-aindent-mode chruby bundler inf-ruby bind-map bind-key auto-yasnippet yasnippet auto-highlight-symbol aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core async ac-ispell auto-complete popup quelpa package-build))))
