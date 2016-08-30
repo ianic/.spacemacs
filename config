@@ -1,0 +1,123 @@
+;; kopiram iz: https://gist.github.com/cies/e286e372fbffc37d7c1c
+
+(defun dotspacemacs/layers ()
+  "Configuration Layers declaration."
+  (setq-default
+   dotspacemacs-configuration-layers
+   '(
+     ;; ----------------------------------------------------------------
+     ;; Example of useful layers you may want to use right away.
+     ;; Uncomment some layer names and press <SPC f e R> (Vim style) or
+     ;; <M-m f e R> (Emacs style) to install them.
+     ;; ----------------------------------------------------------------
+     auto-completion
+     syntax-checking
+     osx
+     (go :variables go-tab-width 4)
+     markdown
+     yaml
+     ruby
+     ruby-on-rails
+     sql
+     javascript
+     html
+     git
+     )
+   )
+  )
+
+(defun dotspacemacs/init ()
+  "Initialization function.
+This function is called at the very startup of Spacemacs initialization
+before layers configuration."
+  ;; This setq-default sexp is an exhaustive list of all the supported
+  ;; spacemacs settings.
+  (setq-default
+   ;; Either `vim' or `emacs'. Evil is always enabled but if the variable
+   ;; is `emacs' then the `holy-mode' is enabled at startup.
+   ;; is `hybrid' onda nesto izmedju
+   dotspacemacs-editing-style 'emacs
+   git-enable-magit-svn-plugin t
+
+   dotspacemacs-emacs-leader-key "C-,"
+   dotspacemacs-major-mode-emacs-leader-key "C-, C-,"
+   dotspacemacs-fullscreen-at-startup t
+   )
+  )
+(setq-default
+ ;;dotspacemacs-themes '(spacemacs-light)
+ dotspacemacs-themes '(leuven)
+ )
+;;keybinding
+(global-set-key "\C-x\C-m" 'helm-M-x)
+(global-set-key "\C-x\m" 'helm-M-x)
+;;(global-set-key "\C-c\C-m" 'helm-M-x)
+(global-set-key "\C-x\C-o" 'other-window)
+(global-set-key (kbd "s-}") 'other-window)
+(global-set-key (kbd "s-{") (lambda ()
+                              (interactive)
+                              (other-window -1)))
+(global-unset-key "\M-o")
+(global-set-key "\M-o" 'other-window)
+
+;;Go dorade
+(defun my-go-local-bindings()
+  (progn
+    (setq gofmt-command "goimports")
+    (local-set-key (kbd "C-c C-r") 'go-remove-unused-imports)
+    (local-set-key (kbd "C-c C-f") 'gofmt)
+    (local-set-key (kbd "C-c C-k") 'godoc)
+    (local-set-key (kbd "C-c C-c") 'compile)
+    ;;(auto-complete-mode)
+    (local-set-key (kbd "C-c C-i") 'go-goto-imports)
+    (local-set-key (kbd "M-.") 'godef-jump)
+    (add-hook 'before-save-hook 'gofmt-before-save)
+    ;; Customize compile command to run go build
+    (if (not (string-match "go" compile-command))
+        (set (make-local-variable 'compile-command)
+             "go test"))
+    ;;(go-oracle-mode)
+    ;;(compile-on-save-mode)
+    (go-guru-hl-identifier-mode)
+    (setq go-tab-width 4)
+    )
+  )
+
+(add-hook 'go-mode-hook 'my-go-local-bindings)
+
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(linum ((t (:height 0.8))))
+ )
+
+
+(setq-default dotspacemacs-default-font '("Source Code Pro"
+                                          :size 13
+                                          :weight normal
+                                          :width normal
+                                          :powerline-scale 1.2))
+
+;; Emacs server
+(setq server-use-tcp t server-port    9999)
+(server-start)
+
+;;gdje ce otvoriti novi window (rgrep, file find...)
+;;http://stackoverflow.com/questions/1381794/too-many-split-screens-opening-in-emacs
+(setq split-height-threshold 999)
+
+;;(setq-default dotspacemacs-smooth-scrolling nil)
+
+
+(global-set-key (kbd "s-1") 'select-window-1)
+(global-set-key (kbd "s-2") 'select-window-2)
+(global-set-key (kbd "s-3") 'select-window-3)
+(global-set-key (kbd "s-4") 'select-window-4)
+(global-set-key (kbd "s-5") 'select-window-5)
+(global-set-key (kbd "s-6") 'select-window-6)
+(global-set-key (kbd "s-7") 'select-window-7)
+(global-set-key (kbd "s-8") 'select-window-8)
+(global-set-key (kbd "s-9") 'select-window-9)
+(global-set-key (kbd "s-0") 'select-window-0)
