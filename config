@@ -1,10 +1,17 @@
 ;; kopiram iz: https://gist.github.com/cies/e286e372fbffc37d7c1c
 
+(defun dotspacemacs/user-config ()
+  "This is were you can ultimately override default Spacemacs configuration.
+This function is called at the very end of Spacemacs initialization."
+  (setq powerline-default-separator 'nil)
+)
+
 (defun dotspacemacs/layers ()
   "Configuration Layers declaration."
   (setq-default
    dotspacemacs-configuration-layers
    '(
+     graphviz
      csv
      nginx
      ;; ----------------------------------------------------------------
@@ -56,6 +63,7 @@ before layers configuration."
  ;;dotspacemacs-themes '(spacemacs-light)
  dotspacemacs-themes '(leuven)
  )
+
 ;;keybinding
 (global-set-key "\C-x\C-m" 'counsel-M-x)
 (global-set-key "\C-x\m" 'counsel-M-x)
@@ -64,34 +72,67 @@ before layers configuration."
 (global-set-key (kbd "s-{") (lambda ()
                               (interactive)
                               (other-window -1)))
+
+;; next / previous error, funkcionira i u go-guru-output bufferu
+(global-set-key (kbd "C-x `") 'next-error)
+(global-set-key (kbd "C-x ~") 'previous-error)
+
 (global-unset-key "\M-o")
 (global-set-key "\M-o" 'other-window)
+(global-set-key "\C-s" 'isearch-forward) ;;override swipera, ivy mode postavi njega
+
+(global-set-key (kbd "C-c a") 'neotree)
+(global-set-key (kbd "C-c c") 'comment-or-uncomment-region)
 
 ;;Go dorade
+;; go-test-current-folder
+(defun go-test-current-folder ()
+  "Launch go test on the current folder."
+  (interactive)
+  (if (go-test--is-gb-project)
+      (go-test--gb-start "all -test.v=true")
+    (go-test--go-test "")))
+
 (defun my-go-local-bindings()
   (progn
     (setq gofmt-command "goimports")
+
     (local-set-key (kbd "C-c C-c") 'compile)
+		(local-set-key (kbd "C-c l") 'go-metalinter)
+		(local-set-key (kbd "C-c t") 'go-test-current-folder)
+    (local-set-key (kbd "C-c f") 'go-test-current-test)
+		(local-set-key (kbd "C-c d") 'go-direx-pop-to-buffer)
+
     (local-set-key (kbd "M-.") 'godef-jump)
+   	(local-set-key (kbd "C-c j") 'godef-jump)
+		(local-set-key (kbd "C-c k") 'godef-jump-other-window)
+		(local-set-key (kbd "C-c r") 'go-guru-referrers)
+		(local-set-key (kbd "C-c n") 'go-rename)
+		(local-set-key (kbd "C-c x") 'go-guru-expand-region)
+
     (add-hook 'before-save-hook 'gofmt-before-save)
     ;; Customize compile command to run go build
     (if (not (string-match "go" compile-command))
         (set (make-local-variable 'compile-command)
              "go test"))
+
+    (go-guru-hl-identifier-mode)  ;; To enable identifier highlighting mode in a Go source buffer
+		(go-eldoc-setup)              ;; da se u minibufferu pojavi eldoc kada stanem na fukciju
     ;; (compile-on-save-mode)
     ;; (go-guru-hl-identifier-mode)
     )
   )
 (add-hook 'go-mode-hook 'my-go-local-bindings)
 
+;; mijenjam background za fringe, prije je bio  #EDEDED 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(fringe ((t (:background "#fff" :foreground "#9B9B9B"))))
  '(helm-source-header ((t (:background "#2F69BF" :foreground "white" :weight bold :height 1.0 :family "Sans Serif"))))
  '(linum ((t (:height 0.8)))))
-
 
 (setq-default dotspacemacs-default-font '("Source Code Pro"
                                           :size 13
@@ -106,7 +147,6 @@ before layers configuration."
 ;; gdje ce otvoriti novi window (rgrep, file find...)
 ;; http://stackoverflow.com/questions/1381794/too-many-split-screens-opening-in-emacs
 ;; (setq split-height-threshold 999)
-
 ;;(setq-default dotspacemacs-smooth-scrolling nil)
 
 
@@ -121,12 +161,14 @@ before layers configuration."
 (global-set-key (kbd "s-9") 'select-window-9)
 (global-set-key (kbd "s-0") 'select-window-0)
 
-
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(custom-safe-themes
+   (quote
+    ("bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" default)))
  '(exec-path
    (quote
     ("/Users/ianic/.rbenv/shims/" "/usr/local/bin/" "/usr/bin/" "/bin/" "/usr/sbin/" "/sbin/" "/Users/ianic/work/gocode/bin/" "/Users/ianic/work/services/bin/" "/Users/ianic/.rbenv/bin/")))
@@ -144,14 +186,13 @@ before layers configuration."
  '(helm-locate-command "mdfind -name %s %s")
  '(helm-mode t)
  '(helm-split-window-in-side-p t t)
+ '(neo-show-hidden-files nil)
+ '(neo-window-fixed-size nil)
  '(package-selected-packages
    (quote
-    (wgrep smex ivy-hydra counsel-projectile counsel swiper ivy flyspell-correct-helm flyspell-correct auto-dictionary csv-mode nginx-mode go-guru pug-mode minitest hide-comnt yaml-mode ws-butler window-numbering which-key web-mode web-beautify volatile-highlights vi-tilde-fringe uuidgen use-package toc-org tagedit sql-indent spacemacs-theme spaceline powerline smeargle slim-mode scss-mode sass-mode rvm ruby-tools ruby-test-mode rubocop rspec-mode robe reveal-in-osx-finder restart-emacs rbenv rainbow-delimiters projectile-rails rake inflections popwin persp-mode pcre2el pbcopy paradox spinner osx-trash osx-dictionary orgit org org-plus-contrib org-bullets open-junk-file neotree move-text mmm-mode markdown-toc markdown-mode magit-gitflow lorem-ipsum livid-mode skewer-mode simple-httpd linum-relative link-hint less-css-mode launchctl json-mode json-snatcher json-reformat js2-refactor multiple-cursors js2-mode js-doc jade-mode info+ indent-guide ido-vertical-mode hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile helm-gitignore request helm-flx helm-descbinds helm-css-scss helm-company helm-c-yasnippet helm-ag haml-mode google-translate golden-ratio go-eldoc gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md flycheck-pos-tip flycheck pkg-info epl flx-ido flx fill-column-indicator feature-mode fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit magit magit-popup git-commit with-editor evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight emmet-mode dumb-jump f diminish define-word company-web web-completion-data company-tern s dash-functional tern dash company-statistics company-quickhelp pos-tip company-go go-mode company column-enforce-mode coffee-mode clean-aindent-mode chruby bundler inf-ruby bind-map bind-key auto-yasnippet yasnippet auto-highlight-symbol aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core async ac-ispell auto-complete popup quelpa package-build)))
+    (all-the-icons ghub let-alist winum fuzzy graphviz-dot-mode wgrep smex ivy-hydra counsel-projectile counsel swiper ivy flyspell-correct-helm flyspell-correct auto-dictionary csv-mode nginx-mode go-guru pug-mode minitest hide-comnt yaml-mode ws-butler window-numbering which-key web-mode web-beautify volatile-highlights vi-tilde-fringe uuidgen use-package toc-org tagedit sql-indent spacemacs-theme spaceline powerline smeargle slim-mode scss-mode sass-mode rvm ruby-tools ruby-test-mode rubocop rspec-mode robe reveal-in-osx-finder restart-emacs rbenv rainbow-delimiters projectile-rails rake inflections popwin persp-mode pcre2el pbcopy paradox spinner osx-trash osx-dictionary orgit org org-plus-contrib org-bullets open-junk-file neotree move-text mmm-mode markdown-toc markdown-mode magit-gitflow lorem-ipsum livid-mode skewer-mode simple-httpd linum-relative link-hint less-css-mode launchctl json-mode json-snatcher json-reformat js2-refactor multiple-cursors js2-mode js-doc jade-mode info+ indent-guide ido-vertical-mode hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile helm-gitignore request helm-flx helm-descbinds helm-css-scss helm-company helm-c-yasnippet helm-ag haml-mode google-translate golden-ratio go-eldoc gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md flycheck-pos-tip flycheck pkg-info epl flx-ido flx fill-column-indicator feature-mode fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit magit magit-popup git-commit with-editor evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight emmet-mode dumb-jump f diminish define-word company-web web-completion-data company-tern s dash-functional tern dash company-statistics company-quickhelp pos-tip company-go go-mode company column-enforce-mode coffee-mode clean-aindent-mode chruby bundler inf-ruby bind-map bind-key auto-yasnippet yasnippet auto-highlight-symbol aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core async ac-ispell auto-complete popup quelpa package-build)))
  '(spaceline-helm-mode t)
  '(split-height-threshold 999))
-
-
-
 
 (defun go-dev-split ()
   "Split window for go development environment."
@@ -170,3 +211,6 @@ before layers configuration."
   (spacemacs/toggle-current-window-dedication)
   (other-window 1)
 )
+
+;; neotree
+(setq neo-theme (if (display-graphic-p) 'icons 'arrow))
