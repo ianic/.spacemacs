@@ -3,8 +3,9 @@
 (defun dotspacemacs/user-config ()
   "This is were you can ultimately override default Spacemacs configuration.
 This function is called at the very end of Spacemacs initialization."
-  (setq powerline-default-separator 'nil)
-
+  ;;(setq powerline-default-separator 'nil)
+  (global-set-key (kbd "H-9") 'kill-bottom-windows)
+  
   (setq neo-show-hidden-files nil)
   ;;(setq neo-window-fixed-size nil)
   (setq neo-theme (if (display-graphic-p) 'icons 'arrow))
@@ -200,8 +201,7 @@ before layers configuration."
 (setq-default dotspacemacs-default-font '("Source Code Pro"
                                           :size 13
                                           :weight normal
-                                          :width normal
-                                          :powerline-scale 1.0))
+                                          :width normal))
 
 ;; Emacs server
 (setq server-use-tcp t server-port    9999)
@@ -250,7 +250,7 @@ before layers configuration."
   (ignore-errors (delete-windows-on "*Go Test*")            )
   (ignore-errors (delete-windows-on "*Gofmt Errors*")       )
   (ignore-errors (delete-windows-on "*grep*")               )
-  (ignore-errors (delete-windows-on "*go-rename*")          )      
+  (ignore-errors (delete-windows-on "*go-rename*")          )
 )
 (global-set-key (kbd "H-9") 'kill-bottom-windows)
 
