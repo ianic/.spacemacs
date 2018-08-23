@@ -128,12 +128,12 @@ before layers configuration."
 (global-set-key "\C-x\m" 'counsel-M-x)
 (global-set-key "\C-x\C-o" 'other-window)
 
-(global-set-key (kbd "s-t") 'switch-to-buffer-other-frame)
-(global-set-key (kbd "s-]") 'other-frame)
+(global-set-key (kbd "H-t") 'switch-to-buffer-other-frame)
+(global-set-key (kbd "H-]") 'other-frame)
 
 
-(global-set-key (kbd "s-}") 'other-window)
-(global-set-key (kbd "s-{") (lambda ()
+(global-set-key (kbd "H-}") 'other-window)
+(global-set-key (kbd "H-{") (lambda ()
                               (interactive)
                               (other-window -1)))
 
@@ -201,7 +201,7 @@ before layers configuration."
                                           :size 13
                                           :weight normal
                                           :width normal
-                                          :powerline-scale 1.2))
+                                          :powerline-scale 1.0))
 
 ;; Emacs server
 (setq server-use-tcp t server-port    9999)
@@ -244,12 +244,34 @@ before layers configuration."
 (defun kill-bottom-windows ()
   ""
   (interactive)
-  (delete-windows-on "*compilation*")
-  (delete-windows-on "*go-guru-output*")
-  (delete-windows-on "*Go Test*")
-  (delete-windows-on "*Gofmt Errors*")
-  (delete-windows-on "*grep*")
-  (delete-windows-on "*go-rename*")
-  (delete-windows-on "*Async Shell Command*")
+  (ignore-errors (delete-windows-on "*Async Shell Command*"))
+  (ignore-errors (delete-windows-on "*compilation*")        )
+  (ignore-errors (delete-windows-on "*go-guru-output*")     )
+  (ignore-errors (delete-windows-on "*Go Test*")            )
+  (ignore-errors (delete-windows-on "*Gofmt Errors*")       )
+  (ignore-errors (delete-windows-on "*grep*")               )
+  (ignore-errors (delete-windows-on "*go-rename*")          )      
 )
-(global-set-key (kbd "s-0") 'kill-bottom-windows)
+(global-set-key (kbd "H-9") 'kill-bottom-windows)
+
+(defun dotspacemacs/emacs-custom-settings ()
+  "Emacs custom settings.
+This is an auto-generated function, do not modify its content directly, use
+Emacs customize menu instead.
+This function is called at the very end of Spacemacs initialization."
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   (quote
+    (yasnippet-snippets symon string-inflection spaceline-all-the-icons powerline seeing-is-believing ruby-refactor ruby-hash-syntax rake inflections prettier-js password-generator spinner markdown-mode magit-svn skewer-mode json-navigator hierarchy json-snatcher json-reformat multiple-cursors js2-mode ivy-yasnippet ivy-xref ivy-purpose window-purpose imenu-list impatient-mode htmlize simple-httpd parent-mode helm helm-core haml-mode godoctor go-tag go-rename go-impl go-gen-test go-fill-struct gitignore-templates pos-tip flycheck flx magit magit-popup git-commit ghub with-editor evil-lion iedit evil-goggles evil-cleverparens smartparens paredit anzu highlight editorconfig f projectile pkg-info epl counsel-css counsel swiper ivy web-completion-data s dash-functional tern dash go-mode company centered-cursor-mode inf-ruby yasnippet memoize avy auto-complete popup pcre2el org-plus-contrib hydra font-lock+ evil goto-chg undo-tree dotenv-mode bind-map bind-key async macrostep helm-themes helm-swoop helm-projectile helm-mode-manager helm-flx helm-descbinds helm-ag elisp-slime-nav define-word auto-compile packed ace-jump-helm-line yaml-mode ws-butler winum which-key wgrep web-mode web-beautify volatile-highlights vi-tilde-fringe uuidgen use-package toc-org tagedit sql-indent spaceline smex smeargle slim-mode scss-mode sass-mode rvm ruby-tools ruby-test-mode rubocop rspec-mode robe reveal-in-osx-finder restart-emacs request rbenv rainbow-delimiters pug-mode projectile-rails popwin persp-mode pbcopy paradox osx-trash osx-dictionary orgit org-bullets open-junk-file nginx-mode neotree move-text mmm-mode minitest markdown-toc magit-gitflow lorem-ipsum livid-mode linum-relative link-hint less-css-mode launchctl json-mode js2-refactor js-doc ivy-hydra indent-guide hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation helm-make graphviz-dot-mode google-translate golden-ratio go-guru go-eldoc gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md fuzzy flycheck-pos-tip flx-ido fill-column-indicator feature-mode fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu emmet-mode dumb-jump diminish csv-mode counsel-projectile company-web company-tern company-statistics company-go column-enforce-mode coffee-mode clean-aindent-mode chruby bundler auto-yasnippet auto-highlight-symbol all-the-icons aggressive-indent adaptive-wrap ace-window ace-link ac-ispell))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(fringe ((t (:background "white" :foreground "#9B9B9B"))))
+ '(linum ((t (:height 0.8)))))
+)
