@@ -3,20 +3,45 @@
 (defun dotspacemacs/user-config ()
   "This is were you can ultimately override default Spacemacs configuration.
 This function is called at the very end of Spacemacs initialization."
-  ;;(setq powerline-default-separator 'nil)
-  (global-set-key (kbd "H-9") 'kill-bottom-windows)
 
   ;; popravlja gresku na query-replace
   ;; https://github.com/syl20bnr/spacemacs/issues/9700
   (setq frame-title-format nil)
+
   (setq python-shell-interpreter "python3")
 
-
+  ;; neo configs
   (setq neo-show-hidden-files nil)
   ;;(setq neo-window-fixed-size nil)
   (setq neo-theme (if (display-graphic-p) 'icons 'arrow))
 
 
+  ;;my keybinding
+  (global-set-key "\C-x\C-m" 'counsel-M-x)
+  (global-set-key "\C-x\m" 'counsel-M-x)
+  (global-set-key "\C-x\C-o" 'other-window)
+
+  (global-set-key (kbd "H-t") 'switch-to-buffer-other-frame)
+  (global-set-key (kbd "H-]") 'other-frame)
+
+
+  (global-set-key (kbd "H-}") 'other-window)
+  (global-set-key (kbd "H-{") (lambda ()
+                                (interactive)
+                                (other-window -1)))
+
+  ;; next / previous error, funkcionira i u go-guru-output bufferu
+  (global-set-key (kbd "C-x `") 'next-error)
+  (global-set-key (kbd "C-x ~") 'previous-error)
+
+  (global-unset-key "\M-o")
+  (global-set-key "\M-o" 'other-window)
+  (global-set-key "\C-s" 'isearch-forward) ;;override swipera, ivy mode postavi njega
+
+  (global-set-key (kbd "C-c a") 'neotree)
+  (global-set-key (kbd "C-c c") 'comment-or-uncomment-region)
+
+  (global-set-key (kbd "H-9") 'kill-bottom-windows)
 
   ;; Configure `display-buffer' behaviour for some special buffers.
   (setq display-buffer-alist
@@ -79,9 +104,9 @@ This function is called at the very end of Spacemacs initialization."
   (setq-default
    dotspacemacs-configuration-layers
    '(python
-   rust
-   systemd
-   graphviz
+     ;; rust
+     systemd
+     graphviz
      csv
      nginx
      ;; ----------------------------------------------------------------
@@ -90,7 +115,6 @@ This function is called at the very end of Spacemacs initialization."
      ;; <M-m f e R> (Emacs style) to install them.
      ;; ----------------------------------------------------------------
      auto-completion
-
      osx
      (go :variables go-tab-width 2)
      markdown
@@ -103,12 +127,13 @@ This function is called at the very end of Spacemacs initialization."
      git
      ;; ovo dolje sluzi da iskljuci syntax-checking sto usporava go-mode za velike file-ove
      ;; https://github.com/syl20bnr/spacemacs/issues/3286
-     ;; syntax-checking
-     (syntax-checking :variables syntax-checking-enable-by-default nil)
+     ;; (syntax-checking :variables syntax-checking-enable-by-default nil)
+     ;; vratio na inicijalno 12.11.2018 da vidim sto ce se dogoditi
+     syntax-checking
      ;; zamjeni helm sa ivy
      ivy
      )
-    dotspacemacs-additional-packages '(all-the-icons)
+     dotspacemacs-additional-packages '(all-the-icons)
    )
   )
 
@@ -123,42 +148,17 @@ before layers configuration."
    ;; is `emacs' then the `holy-mode' is enabled at startup.
    ;; is `hybrid' onda nesto izmedju
    dotspacemacs-editing-style 'emacs
-   git-enable-magit-svn-plugin t
+   ;; git-enable-magit-svn-plugin t
 
    dotspacemacs-emacs-leader-key "C-,"
    dotspacemacs-major-mode-emacs-leader-key "C-, C-,"
-   ;;dotspacemacs-fullscreen-at-startup t
+   dotspacemacs-fullscreen-at-startup t
    )
   )
 (setq-default
  ;;dotspacemacs-themes '(spacemacs-light)
  dotspacemacs-themes '(leuven)
  )
-
-;;keybinding
-(global-set-key "\C-x\C-m" 'counsel-M-x)
-(global-set-key "\C-x\m" 'counsel-M-x)
-(global-set-key "\C-x\C-o" 'other-window)
-
-(global-set-key (kbd "H-t") 'switch-to-buffer-other-frame)
-(global-set-key (kbd "H-]") 'other-frame)
-
-
-(global-set-key (kbd "H-}") 'other-window)
-(global-set-key (kbd "H-{") (lambda ()
-                              (interactive)
-                              (other-window -1)))
-
-;; next / previous error, funkcionira i u go-guru-output bufferu
-(global-set-key (kbd "C-x `") 'next-error)
-(global-set-key (kbd "C-x ~") 'previous-error)
-
-(global-unset-key "\M-o")
-(global-set-key "\M-o" 'other-window)
-(global-set-key "\C-s" 'isearch-forward) ;;override swipera, ivy mode postavi njega
-
-(global-set-key (kbd "C-c a") 'neotree)
-(global-set-key (kbd "C-c c") 'comment-or-uncomment-region)
 
 ;;Go dorade
 ;; go-test-current-folder
@@ -216,7 +216,7 @@ before layers configuration."
                                           :width normal))
 
 ;; Emacs server
-(setq server-use-tcp t server-port    9999)
+(setq server-use-tcp t server-port 9999)
 (server-start)
 
 ;; gdje ce otvoriti novi window (rgrep, file find...)
@@ -251,7 +251,6 @@ before layers configuration."
   (other-window 1)
 )
 
-
 ;; poubijaj windows koji mi se otvaraju u dnu
 (defun kill-bottom-windows ()
   ""
@@ -265,7 +264,6 @@ before layers configuration."
   (ignore-errors (delete-windows-on "*grep*")               )
   (ignore-errors (delete-windows-on "*go-rename*")          )
 )
-(global-set-key (kbd "H-9") 'kill-bottom-windows)
 
 (defun dotspacemacs/emacs-custom-settings ()
   "Emacs custom settings.
@@ -288,11 +286,3 @@ This function is called at the very end of Spacemacs initialization."
  '(fringe ((t (:background "white" :foreground "#9B9B9B"))))
  '(linum ((t (:height 0.8)))))
 )
-
-
-;; popravlja gresku na query-replace
-;; https://github.com/syl20bnr/spacemacs/issues/9700
-(setq frame-title-format nil)
-
-
-(setq python-shell-interpreter "python3")
