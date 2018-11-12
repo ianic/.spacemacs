@@ -5,12 +5,19 @@
 This function is called at the very end of Spacemacs initialization."
   ;;(setq powerline-default-separator 'nil)
   (global-set-key (kbd "H-9") 'kill-bottom-windows)
-  
+
+  ;; popravlja gresku na query-replace
+  ;; https://github.com/syl20bnr/spacemacs/issues/9700
+  (setq frame-title-format nil)
+  (setq python-shell-interpreter "python3")
+
+
   (setq neo-show-hidden-files nil)
   ;;(setq neo-window-fixed-size nil)
   (setq neo-theme (if (display-graphic-p) 'icons 'arrow))
 
-  ;; EXPERIMENTAL
+
+
   ;; Configure `display-buffer' behaviour for some special buffers.
   (setq display-buffer-alist
         `(
@@ -43,11 +50,13 @@ This function is called at the very end of Spacemacs initialization."
                     "*Cargo"                ; Cargo process buffers
                     "*go-guru-output*"
                     "*Go Test*"
+                    "*go test*"
                     "*Gofmt Errors*"
                     "*grep*"
                     "*go-rename*"
                     "^\*go-direx:"
                     "*Async Shell Command*"
+                    "*go test*"
                     (and (1+ nonl) " output*") ; AUCTeX command output
                     ))
            (display-buffer-reuse-window
@@ -56,7 +65,7 @@ This function is called at the very end of Spacemacs initialization."
            (side            . bottom)
            (reusable-frames . visible)
            ;;(window-width . 0.3)
-           ;;(window-height   . 0.33)
+           (window-height   . 0.2)
            )
           ;; Let `display-buffer' reuse visible frames for all buffers.  This must
           ;; be the last entry in `display-buffer-alist', because it overrides any
@@ -69,8 +78,10 @@ This function is called at the very end of Spacemacs initialization."
   "Configuration Layers declaration."
   (setq-default
    dotspacemacs-configuration-layers
-   '(
-     graphviz
+   '(python
+   rust
+   systemd
+   graphviz
      csv
      nginx
      ;; ----------------------------------------------------------------
@@ -169,6 +180,7 @@ before layers configuration."
 		(local-set-key (kbd "C-c d") 'go-direx-pop-to-buffer)
 
     (local-set-key (kbd "M-.") 'godef-jump)
+    (local-set-key (kbd "C-.") 'godef-jump-other-window)
    	(local-set-key (kbd "C-c j") 'godef-jump)
 		(local-set-key (kbd "C-c k") 'godef-jump-other-window)
 		(local-set-key (kbd "C-c r") 'go-guru-referrers)
@@ -247,6 +259,7 @@ before layers configuration."
   (ignore-errors (delete-windows-on "*Async Shell Command*"))
   (ignore-errors (delete-windows-on "*compilation*")        )
   (ignore-errors (delete-windows-on "*go-guru-output*")     )
+  (ignore-errors (delete-windows-on "*go test*")            )
   (ignore-errors (delete-windows-on "*Go Test*")            )
   (ignore-errors (delete-windows-on "*Gofmt Errors*")       )
   (ignore-errors (delete-windows-on "*grep*")               )
@@ -266,7 +279,7 @@ This function is called at the very end of Spacemacs initialization."
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (yasnippet-snippets symon string-inflection spaceline-all-the-icons powerline seeing-is-believing ruby-refactor ruby-hash-syntax rake inflections prettier-js password-generator spinner markdown-mode magit-svn skewer-mode json-navigator hierarchy json-snatcher json-reformat multiple-cursors js2-mode ivy-yasnippet ivy-xref ivy-purpose window-purpose imenu-list impatient-mode htmlize simple-httpd parent-mode helm helm-core haml-mode godoctor go-tag go-rename go-impl go-gen-test go-fill-struct gitignore-templates pos-tip flycheck flx magit magit-popup git-commit ghub with-editor evil-lion iedit evil-goggles evil-cleverparens smartparens paredit anzu highlight editorconfig f projectile pkg-info epl counsel-css counsel swiper ivy web-completion-data s dash-functional tern dash go-mode company centered-cursor-mode inf-ruby yasnippet memoize avy auto-complete popup pcre2el org-plus-contrib hydra font-lock+ evil goto-chg undo-tree dotenv-mode bind-map bind-key async macrostep helm-themes helm-swoop helm-projectile helm-mode-manager helm-flx helm-descbinds helm-ag elisp-slime-nav define-word auto-compile packed ace-jump-helm-line yaml-mode ws-butler winum which-key wgrep web-mode web-beautify volatile-highlights vi-tilde-fringe uuidgen use-package toc-org tagedit sql-indent spaceline smex smeargle slim-mode scss-mode sass-mode rvm ruby-tools ruby-test-mode rubocop rspec-mode robe reveal-in-osx-finder restart-emacs request rbenv rainbow-delimiters pug-mode projectile-rails popwin persp-mode pbcopy paradox osx-trash osx-dictionary orgit org-bullets open-junk-file nginx-mode neotree move-text mmm-mode minitest markdown-toc magit-gitflow lorem-ipsum livid-mode linum-relative link-hint less-css-mode launchctl json-mode js2-refactor js-doc ivy-hydra indent-guide hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation helm-make graphviz-dot-mode google-translate golden-ratio go-guru go-eldoc gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md fuzzy flycheck-pos-tip flx-ido fill-column-indicator feature-mode fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu emmet-mode dumb-jump diminish csv-mode counsel-projectile company-web company-tern company-statistics company-go column-enforce-mode coffee-mode clean-aindent-mode chruby bundler auto-yasnippet auto-highlight-symbol all-the-icons aggressive-indent adaptive-wrap ace-window ace-link ac-ispell))))
+    (inf-mongo yapfify stickyfunc-enhance pyvenv pytest pyenv-mode py-isort pippel pipenv pip-requirements lsp-python lsp-mode live-py-mode importmagic epc ctable concurrent deferred helm-pydoc helm-gtags helm-cscope xcscope ggtags cython-mode counsel-gtags company-anaconda anaconda-mode pythonic macrostep helm-themes helm-swoop helm-projectile helm-mode-manager helm-flx helm-descbinds helm-ag elisp-slime-nav define-word auto-compile packed ace-jump-helm-line yaml-mode ws-butler winum which-key wgrep web-mode web-beautify volatile-highlights vi-tilde-fringe uuidgen use-package toc-org tagedit sql-indent spaceline smex smeargle slim-mode scss-mode sass-mode rvm ruby-tools ruby-test-mode rubocop rspec-mode robe reveal-in-osx-finder restart-emacs request rbenv rainbow-delimiters pug-mode projectile-rails popwin persp-mode pbcopy paradox osx-trash osx-dictionary orgit org-bullets open-junk-file nginx-mode neotree move-text mmm-mode minitest markdown-toc magit-gitflow lorem-ipsum livid-mode linum-relative link-hint less-css-mode launchctl json-mode js2-refactor js-doc ivy-hydra indent-guide hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation helm-make graphviz-dot-mode google-translate golden-ratio go-guru go-eldoc gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md fuzzy flycheck-pos-tip flx-ido fill-column-indicator feature-mode fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu emmet-mode dumb-jump diminish csv-mode counsel-projectile company-web company-tern company-statistics company-go column-enforce-mode coffee-mode clean-aindent-mode chruby bundler auto-yasnippet auto-highlight-symbol all-the-icons aggressive-indent adaptive-wrap ace-window ace-link ac-ispell))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -275,3 +288,11 @@ This function is called at the very end of Spacemacs initialization."
  '(fringe ((t (:background "white" :foreground "#9B9B9B"))))
  '(linum ((t (:height 0.8)))))
 )
+
+
+;; popravlja gresku na query-replace
+;; https://github.com/syl20bnr/spacemacs/issues/9700
+(setq frame-title-format nil)
+
+
+(setq python-shell-interpreter "python3")
