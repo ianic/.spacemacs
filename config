@@ -105,7 +105,9 @@ This function is called at the very end of Spacemacs initialization."
    dotspacemacs-configuration-layers
    '(python
      ;; rust
-     systemd
+     ;; systemd
+     docker
+     shell
      graphviz
      csv
      nginx
@@ -116,7 +118,9 @@ This function is called at the very end of Spacemacs initialization."
      ;; ----------------------------------------------------------------
      auto-completion
      osx
-     (go :variables go-tab-width 2)
+     (go :variables
+         go-tab-width 2)
+         ;;go-use-gometalinter t)
      markdown
      yaml
      ruby
@@ -153,6 +157,8 @@ before layers configuration."
    dotspacemacs-emacs-leader-key "C-,"
    dotspacemacs-major-mode-emacs-leader-key "C-, C-,"
    dotspacemacs-fullscreen-at-startup t
+
+   dotspacemacs-check-for-update t
    )
   )
 (setq-default
@@ -172,6 +178,24 @@ before layers configuration."
 (defun my-go-local-bindings()
   (progn
     (setq gofmt-command "goimports")
+
+    ;; skips 'vendor' directories and sets GO15VENDOREXPERIMENT=1
+    (setq flycheck-gometalinter-vendor t)
+    ;; only show errors
+    (setq flycheck-gometalinter-errors-only t)
+    ;; only run fast linters
+    (setq flycheck-gometalinter-fast t)
+    ;; use in tests files
+    (setq flycheck-gometalinter-test t)
+    ;; disable linters
+    (setq flycheck-gometalinter-disable-linters '("gotype" "gocyclo"))
+    ;; Only enable selected linters
+    ;(setq flycheck-gometalinter-disable-all t)
+    ;(setq flycheck-gometalinter-enable-linters '("golint"))
+    ;; Set different deadline (default: 5s)
+    (setq flycheck-gometalinter-deadline "5s")
+    ;; Use a gometalinter configuration file (default: nil)
+    ;;(setq flycheck-gometalinter-config "/path/to/gometalinter-config.json")
 
     (local-set-key (kbd "C-c C-c") 'compile)
 		(local-set-key (kbd "C-c l") 'go-metalinter)
@@ -213,7 +237,8 @@ before layers configuration."
 (setq-default dotspacemacs-default-font '("Source Code Pro"
                                           :size 13
                                           :weight normal
-                                          :width normal))
+                                          :width normal
+                                          :powerline-scale 1.1))
 
 ;; Emacs server
 (setq server-use-tcp t server-port 9999)
@@ -275,9 +300,11 @@ This function is called at the very end of Spacemacs initialization."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(flycheck-disabled-checkers (quote (go-megacheck)))
+ '(js-indent-level 2)
  '(package-selected-packages
    (quote
-    (inf-mongo yapfify stickyfunc-enhance pyvenv pytest pyenv-mode py-isort pippel pipenv pip-requirements lsp-python lsp-mode live-py-mode importmagic epc ctable concurrent deferred helm-pydoc helm-gtags helm-cscope xcscope ggtags cython-mode counsel-gtags company-anaconda anaconda-mode pythonic macrostep helm-themes helm-swoop helm-projectile helm-mode-manager helm-flx helm-descbinds helm-ag elisp-slime-nav define-word auto-compile packed ace-jump-helm-line yaml-mode ws-butler winum which-key wgrep web-mode web-beautify volatile-highlights vi-tilde-fringe uuidgen use-package toc-org tagedit sql-indent spaceline smex smeargle slim-mode scss-mode sass-mode rvm ruby-tools ruby-test-mode rubocop rspec-mode robe reveal-in-osx-finder restart-emacs request rbenv rainbow-delimiters pug-mode projectile-rails popwin persp-mode pbcopy paradox osx-trash osx-dictionary orgit org-bullets open-junk-file nginx-mode neotree move-text mmm-mode minitest markdown-toc magit-gitflow lorem-ipsum livid-mode linum-relative link-hint less-css-mode launchctl json-mode js2-refactor js-doc ivy-hydra indent-guide hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation helm-make graphviz-dot-mode google-translate golden-ratio go-guru go-eldoc gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md fuzzy flycheck-pos-tip flx-ido fill-column-indicator feature-mode fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu emmet-mode dumb-jump diminish csv-mode counsel-projectile company-web company-tern company-statistics company-go column-enforce-mode coffee-mode clean-aindent-mode chruby bundler auto-yasnippet auto-highlight-symbol all-the-icons aggressive-indent adaptive-wrap ace-window ace-link ac-ispell))))
+    (rjsx-mode jsx-mode writeroom-mode visual-fill-column macrostep helm-themes helm-swoop helm-projectile helm-mode-manager helm-flx helm-descbinds helm-ag elisp-slime-nav define-word auto-compile packed ace-jump-helm-line yaml-mode ws-butler winum which-key wgrep web-mode web-beautify volatile-highlights vi-tilde-fringe uuidgen use-package toc-org tagedit sql-indent spaceline smex smeargle slim-mode scss-mode sass-mode rvm ruby-tools ruby-test-mode rubocop rspec-mode robe reveal-in-osx-finder restart-emacs request rbenv rainbow-delimiters pug-mode projectile-rails popwin persp-mode pbcopy paradox osx-trash osx-dictionary orgit org-bullets open-junk-file nginx-mode neotree move-text mmm-mode minitest markdown-toc magit-gitflow lorem-ipsum livid-mode linum-relative link-hint less-css-mode launchctl json-mode js2-refactor js-doc ivy-hydra indent-guide hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation helm-make graphviz-dot-mode google-translate golden-ratio go-guru go-eldoc gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md fuzzy flycheck-pos-tip flx-ido fill-column-indicator feature-mode fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu emmet-mode dumb-jump diminish csv-mode counsel-projectile company-web company-tern company-statistics company-go column-enforce-mode coffee-mode clean-aindent-mode chruby bundler auto-yasnippet auto-highlight-symbol all-the-icons aggressive-indent adaptive-wrap ace-window ace-link ac-ispell))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -286,3 +313,4 @@ This function is called at the very end of Spacemacs initialization."
  '(fringe ((t (:background "white" :foreground "#9B9B9B"))))
  '(linum ((t (:height 0.8)))))
 )
+
